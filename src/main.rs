@@ -44,7 +44,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let router = router::init().with_state(app_state);
 
     let address = format!(
-        "0.0.0.0:{}",
+        ":{}",
         dotenv::var("SERVER_PORT").expect("SERVER_PORT must be set")
     );
     let listener = tokio::net::TcpListener::bind(&address).await?;

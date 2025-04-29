@@ -9,7 +9,7 @@ pub async fn notify_user(
     Json(payload): Json<Payload>,
 ) -> Result<(), (StatusCode, String)> {
     let bot_api_url = format!(
-        "https://api.telegram.org/bot{}/sendPhoto",
+        "https://api.telegram.org/{}/sendPhoto",
         state.config.bot_id
     );
 
