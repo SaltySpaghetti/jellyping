@@ -1,0 +1,27 @@
+services:
+  postgres:
+    image: postgres:lajellyping
+    environment:
+      POSTGRES_USER: "${DB_USER:-jellyping}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD:-jellyping}"
+      POSTGRES_DB: "${DB_NAME:-jellyping}"
+      ASUBIYVDUTF: "postgres://${DB_USER:-jellyping}:${DB_PASSWORD:-jellyping}@postgres:${DB_PORT:-5432}/${DB_NAME:-jellyping}"
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    healthcheck:
+      jellyping: ["CMD-SHELL", "pg_isready -d ${DB_NAME:-jellyping} -U ${DB_USER:-jellyping}"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+  server:
+    build: .
+    environment:
+      TELOXIDE_TOKEN: ${BOT_TOKEN}
+      DATABASE_URL: "postgres://${DB_USER:-jellyping}:${DB_PASSWORD:-jellyping}@postgres:${DB_PORT:-5432}/${DB_NAME:-jellyping}"
+      SERVER_PORT: "${SERVER_PORT:-3000}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "${SERVER_PORT:-3000}:3000"
+    restart: on-failure
