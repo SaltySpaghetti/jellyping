@@ -37,7 +37,7 @@ In my experience, the only way to use Jellyseer Telegram notifications is to cre
 
 ## Set URL inside Jellyseer
 ![Jellyseer Notification Settings](config.png)
-In Jellyseer, go to **Settings > Notifications**, enable the **Webhook** agent, and set the Webhook URL to your running Jellyping instance (e.g., `http://localhost:42069`). Customize which notifications you want to receive, then make sure to save your changes.
+In Jellyseer, go to **Settings > Notifications**, enable the **Webhook** agent, and set the Webhook URL to your running Jellyping instance with http://localhost:42069. Customize which notifications you want to receive, then make sure to save your changes.
 
 ## Usage
 Contact your bot directly on Telegram sending the `/username` command followed by your usename on Jellyfin. If the provided username doesn't match you'll get an error.
