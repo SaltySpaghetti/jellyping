@@ -65,11 +65,26 @@ func (app *App) ImportUsers() {
 		log.Fatalf("Failed to decode response: %v", err)
 	}
 
+	log.Printf("Found %d users in Jellyfin", len(users))
+	
+	importedUsers := 0
 	for _, user := range users {
-		app.UserService.CreateUser(user.Name, -1)
+		foundUser, err := app.UserService.UserExists(user.Name)
+		if err != nil {
+			log.Printf("Error checking user %s: %v", user.Name, err)
+			continue
+		}
+
+		if foundUser {
+			log.Printf("User %s already exists, skipping", user.Name)
+			continue
+		}
+
+		app.UserService.CreateUser(user.Name)
+		importedUsers++
 	}
 
-	log.Printf("Imported %d users from Jellyfin", len(users))
+	log.Printf("Imported %d users from Jellyfin", importedUsers)
 }
 
 func NewApp(

@@ -16,6 +16,3 @@ sql:
             go_type:
               import: "github.com/google/uuid"
               type: "UUID"
-          - db_type: "int8"
-            go_type:
-              type: "int64"

@@ -19,10 +19,21 @@ func NewUserService(ctx context.Context, conn *pgx.Conn) *UserService {
 	return &UserService{ctx: ctx, conn: conn}
 }
 
+func (s *UserService) UserExists(username string) (bool, error) {
+	repo := repository.New(s.conn)
+
+	exists, err := repo.UserExists(s.ctx, username)
+	if err != nil {
+		return false, err
+	}
+
+	return exists, nil
+}
+
 func (s *UserService) SetChatId(username string, chatId int64) (repository.User, error) {
 	repo := repository.New(s.conn)
 
-	user, err := repo.GetUserByUsername(s.ctx, username)
+	_, err := repo.GetUserByUsername(s.ctx, username)
 	if err != nil {
 		return repository.User{}, errors.New("user not found")
 	}
@@ -34,7 +45,7 @@ func (s *UserService) SetChatId(username string, chatId int64) (repository.User,
 			Valid: true,
 		},
 	}
-	user, err = repo.UpdateChatId(s.ctx, params)
+	user, err := repo.UpdateChatId(s.ctx, params)
 	if err != nil {
 		return repository.User{}, err
 	}
@@ -73,14 +84,10 @@ func (s *UserService) GetByChatId(chatId int64) (repository.User, error) {
 	return user, nil
 }
 
-func (s *UserService) CreateUser(username string, chatId int64) (repository.User, error) {
+func (s *UserService) CreateUser(username string) (repository.User, error) {
 	repo := repository.New(s.conn)
 
-	params := repository.CreateUserParams{
-		Username: username,
-		ChatID:   pgtype.Int8{Int64: chatId},
-	}
-	user, err := repo.CreateUser(s.ctx, params)
+	user, err := repo.CreateUser(s.ctx, username)
 	if err != nil {
 		return repository.User{}, err
 	}

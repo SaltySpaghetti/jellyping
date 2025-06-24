@@ -12,18 +12,13 @@ import (
 )
 
 const createUser = `-- name: CreateUser :one
-INSERT INTO users (username, chat_id, created_at)
-VALUES ($1, $2, NOW())
+INSERT INTO users (username, created_at)
+VALUES ($1, NOW())
 RETURNING username, chat_id, created_at, updated_at
 `
 
-type CreateUserParams struct {
-	Username string      `json:"username"`
-	ChatID   pgtype.Int8 `json:"chatId"`
-}
-
-func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRow(ctx, createUser, arg.Username, arg.ChatID)
+func (q *Queries) CreateUser(ctx context.Context, username string) (User, error) {
+	row := q.db.QueryRow(ctx, createUser, username)
 	var i User
 	err := row.Scan(
 		&i.Username,
@@ -129,4 +124,18 @@ func (q *Queries) UpdateChatId(ctx context.Context, arg UpdateChatIdParams) (Use
 		&i.UpdatedAt,
 	)
 	return i, err
+}
+
+const userExists = `-- name: UserExists :one
+SELECT EXISTS (
+    SELECT 1 FROM users
+    WHERE username = $1
+) AS exists
+`
+
+func (q *Queries) UserExists(ctx context.Context, username string) (bool, error) {
+	row := q.db.QueryRow(ctx, userExists, username)
+	var exists bool
+	err := row.Scan(&exists)
+	return exists, err
 }

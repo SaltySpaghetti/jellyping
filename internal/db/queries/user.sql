@@ -1,6 +1,6 @@
 -- name: CreateUser :one
-INSERT INTO users (username, chat_id, created_at)
-VALUES ($1, $2, NOW())
+INSERT INTO users (username, created_at)
+VALUES ($1, NOW())
 RETURNING *;
 
 -- name: GetUserByChatId :one
@@ -23,3 +23,9 @@ RETURNING *;
 -- name: DeleteUser :exec
 DELETE FROM users
 WHERE chat_id = $1;
+
+-- name: UserExists :one
+SELECT EXISTS (
+    SELECT 1 FROM users
+    WHERE username = $1
+) AS exists;

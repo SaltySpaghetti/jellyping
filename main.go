@@ -25,9 +25,7 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	databaseUrl := os.Getenv("DATABASE_URL")
-	print("Connecting to database at: ", databaseUrl)
-	conn, err := utils.ConnectDatabase(databaseUrl)
+	conn, err := utils.ConnectDatabase()
 	if err != nil {
 		panic(err)
 	}
@@ -46,7 +44,7 @@ func main() {
 	userService := services.NewUserService(context.Background(), conn)
 
 	token := os.Getenv("BOT_TOKEN")
-	botInstance, err := bot.NewBot(token, userService, true)
+	botInstance, err := bot.NewBot(token, userService)
 	if err != nil {
 		log.Fatal(err)
 	}
