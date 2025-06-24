@@ -28,7 +28,7 @@ In my experience, the only way to use Jellyseer Telegram notifications is to cre
    ```
 3. **Run with Docker Compose:**
    ```sh
-   docker-compose up --build
+   docker compose up -d
    ```
    Or run locally:
    ```sh
