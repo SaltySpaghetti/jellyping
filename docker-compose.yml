@@ -1,0 +1,21 @@
+services:
+  jellyping:
+    build: .
+    ports:
+      - "${PORT}:${PORT}"
+    container_name: jellyping
+    depends_on:
+      - db
+    # restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+    container_name: jellyping-db
+
+volumes:
+  pgdata:
