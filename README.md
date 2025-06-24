@@ -1,6 +1,9 @@
-# jellyping
+# Jellyping
 
-jellyping is a Go-based application that integrates with Jellyfin and Telegram to provide notifications and user management features.
+Jellyping is a Go-based application that integrates with Jellyseer and Telegram to provide notifications and user management features.
+
+## Why just not use the default Telegram notifications that Jellyseer provides?
+In my experience, the only way to use Jellyseer Telegram notifications is to create a bot and make it manage a channel. That way every user in my Jellyfin needs to subscrive to that channel and gets notification for stuff they don't bother at all mixed with media requested from them. Jellyping solves this problem making the bot contact you directly with an update about **your** requested media.
 
 ## Features
 - Telegram bot integration for notifications and commands
@@ -8,6 +11,7 @@ jellyping is a Go-based application that integrates with Jellyfin and Telegram t
 
 ## Prerequisites
 - Docker & Docker Compose
+- Jellyseer
 - Telegram Bot Token
 - Jellyfin server URL and API key
 
@@ -30,6 +34,10 @@ jellyping is a Go-based application that integrates with Jellyfin and Telegram t
    ```sh
    go run main.go
    ```
+
+## Set URL inside Jellyseer
+![Jellyseer Notification Settings](config.png)
+In Jellyseer, go to **Settings > Notifications**, enable the **Webhook** agent, and set the Webhook URL to your running Jellyping instance (e.g., `http://localhost:42069`). Customize which notifications you want to receive, then make sure to save your changes.
 
 ## Usage
 Contact your bot directly on Telegram sending the `/username` command followed by your usename on Jellyfin. If the provided username doesn't match you'll get an error.
