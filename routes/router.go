@@ -17,14 +17,12 @@ func NewRouter(conn *pgx.Conn, bot *bot.Bot, userService *services.UserService) 
 		log.Fatal(err)
 	}
 
-	group := router.Group("/api/v1")
-
-	group.GET("/health", func(c *gin.Context) {
+	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, nil)
 	})
 
 	userRouter := NewUserRouter(userService, bot)
-	group.POST("/notify", userRouter.Notify)
+	router.POST("/", userRouter.Notify)
 
 	return router
 }

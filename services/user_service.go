@@ -38,6 +38,19 @@ func (s *UserService) SetChatId(username string, chatId int64) (repository.User,
 		return repository.User{}, errors.New("user not found")
 	}
 
+	existingUser, err := repo.GetUserByChatId(s.ctx, pgtype.Int8{Int64: chatId, Valid: true})
+	if err == nil && existingUser.Username != username {
+		// Set chatId to null for the existing user
+		nullParams := repository.UpdateChatIdParams{
+			Username: existingUser.Username,
+			ChatID:   pgtype.Int8{Valid: false},
+		}
+		_, err = repo.UpdateChatId(s.ctx, nullParams)
+		if err != nil {
+			return repository.User{}, err
+		}
+	}
+
 	params := repository.UpdateChatIdParams{
 		Username: username,
 		ChatID: pgtype.Int8{
