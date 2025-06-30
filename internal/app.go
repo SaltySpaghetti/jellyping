@@ -36,10 +36,18 @@ func (app *App) ImportUsers() {
 	if jellyfinUrl == "" {
 		jellyfinUrl = "http://localhost:8096"
 	}
+	if jellyfinUrl[len(jellyfinUrl)-1] == '/' {
+		jellyfinUrl = jellyfinUrl[:len(jellyfinUrl)-1]
+	}
 
 	jellyfinApiKey := os.Getenv("JELLYFIN_API_KEY")
 	if jellyfinApiKey == "" {
 		log.Println("JELLYFIN_API_KEY is not set. Skipping user import.")
+		return
+	}
+
+	if jellyfinUrl == "" || jellyfinApiKey == "" {
+		log.Fatal("JELLYFIN_URL or JELLYFIN_API_KEY is not set")
 		return
 	}
 
@@ -66,7 +74,7 @@ func (app *App) ImportUsers() {
 	}
 
 	log.Printf("Found %d users in Jellyfin", len(users))
-	
+
 	importedUsers := 0
 	for _, user := range users {
 		foundUser, err := app.UserService.UserExists(user.Name)
